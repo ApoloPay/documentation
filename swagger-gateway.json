@@ -1,0 +1,168 @@
+{
+    "openapi": "3.0.0",
+    "paths": {
+        "/payment-button/health": {
+            "get": {
+                "operationId": "AppController_getHello",
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": ""
+                    }
+                },
+                "summary": "Health Check",
+                "tags": [
+                    "App"
+                ]
+            }
+        },
+        "/payment-button/assets": {
+            "get": {
+                "description": "getAssets description",
+                "operationId": "MicroPaymentButtonController_getAssets",
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": ""
+                    }
+                },
+                "summary": "Get Assets",
+                "tags": [
+                    "micro-payment-button"
+                ]
+            }
+        },
+        "/payment-button/process/preorder": {
+            "post": {
+                "operationId": "MicroPaymentButtonController_createPreorder",
+                "parameters": [],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/CreatePreorderDto"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": ""
+                    }
+                },
+                "security": [
+                    {
+                        "x-secret-key": []
+                    }
+                ],
+                "summary": "Create Preorder",
+                "tags": [
+                    "micro-payment-button"
+                ]
+            }
+        },
+        "/payment-button/process/confirm": {
+            "post": {
+                "operationId": "MicroPaymentButtonController_confirmProcess",
+                "parameters": [],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/ConfirmProcessDto"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": ""
+                    }
+                },
+                "security": [
+                    {
+                        "x-public-key": []
+                    }
+                ],
+                "summary": "Confirm Process",
+                "tags": [
+                    "micro-payment-button"
+                ]
+            }
+        }
+    },
+    "info": {
+        "title": "ApoloPay - Gateway Payment Button",
+        "description": "ApoloPay APIs Documentation",
+        "version": "1.0",
+        "contact": {}
+    },
+    "tags": [],
+    "servers": [],
+    "components": {
+        "securitySchemes": {
+            "bearer": {
+                "scheme": "bearer",
+                "bearerFormat": "JWT",
+                "type": "http"
+            },
+            "x-public-key": {
+                "type": "apiKey",
+                "in": "header",
+                "name": "x-public-key"
+            },
+            "x-secret-key": {
+                "type": "apiKey",
+                "in": "header",
+                "name": "x-secret-key"
+            }
+        },
+        "schemas": {
+            "CreatePreorderDto": {
+                "type": "object",
+                "properties": {
+                    "amount": {
+                        "type": "number",
+                        "example": 25.5,
+                        "description": "Monto del pago a procesar"
+                    },
+                    "metadata": {
+                        "type": "object",
+                        "example": {
+                            "orderId": "ORD-9821",
+                            "customerEmail": "user@email.com"
+                        },
+                        "description": "Datos adicionales del proceso (máximo ~10KB)"
+                    }
+                },
+                "required": [
+                    "amount"
+                ]
+            },
+            "ConfirmProcessDto": {
+                "type": "object",
+                "properties": {
+                    "processId": {
+                        "type": "string",
+                        "description": "uuid del proceso a confirmar"
+                    },
+                    "networkId": {
+                        "type": "string",
+                        "description": "uuid de la red donde se realizará el pago"
+                    },
+                    "assetId": {
+                        "type": "string",
+                        "description": "uuid de la moneda que se utilizará para el pago"
+                    }
+                },
+                "required": [
+                    "processId",
+                    "networkId",
+                    "assetId"
+                ]
+            }
+        }
+    }
+}
